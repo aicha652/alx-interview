@@ -5,9 +5,11 @@ set represents a valid UTF-8 encoding"""
 
 def validUTF8(data):
     """define a function"""
-    for item in data:
-        try:
-            data_decode = data.decode('utf-8')
-        except UnicodeDecodeError:
+    try:
+        if any(not 0 <= byte <= 255 for byte in data):
             return False
-    return True
+        data_byte = bytes(data)
+        data_byte.decode('utf-8')
+        return True
+    except UnicodeDecodeError:
+        return False
