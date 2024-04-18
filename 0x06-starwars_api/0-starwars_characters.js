@@ -13,7 +13,7 @@ request.get(url, async (error, response, body) => {
     await new Promise((resolve) => {
       request.get(character, (error, response, body) => {
         if (error) {
-          reject(error);
+          resolve();
         }
         const characterData = JSON.parse(body);
         console.log(characterData.name);
