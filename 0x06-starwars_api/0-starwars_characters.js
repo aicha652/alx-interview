@@ -8,12 +8,18 @@ const url = 'https://swapi-api.alx-tools.com/api/films/' + arg + '/';
 
 request.get(url, async (error, response, body) => {
   if (error) console.log(error);
-  const data = await JSON.parse(body);
+  const data = JSON.parse(body);
   for (const character of data.characters) {
-    request.get(character, async (error, response, body) => {
-      if (error) console.log(error);
-      const characterData = await JSON.parse(body);
-      console.log(characterData.name);
+    await new Promise((resolve) => {
+      request.get(character, (error, response, body) => {
+        if (error) {
+          console.log(error);
+          resolve();
+        }
+        const characterData = JSON.parse(body);
+        console.log(characterData.name);
+        resolve();
+      });
     });
   }
 });
