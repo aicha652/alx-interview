@@ -3,20 +3,22 @@
 const process = require('process');
 const arg = process.argv[2];
 const request = require('request');
-
+const options = { json: true };
 const url = 'https://swapi-api.alx-tools.com/api/films/' + arg + '/';
 
-request.get(url, async (error, response, body) => {
-  if (error) console.log(error);
-  const data = JSON.parse(body);
-  for (const character of data.characters) {
+request(url, options, async (error, response, body) => {
+  if (error) {
+    console.error(error);
+    return;
+  }
+  for (const character of body.characters) {
     await new Promise((resolve) => {
-      request.get(character, (error, response, body) => {
+      request(character, options, (error, response, body) => {
         if (error) {
-          reject(error);
+          console.error(error);
+          resolve();
         }
-        const characterData = JSON.parse(body);
-        console.log(characterData.name);
+        console.log(body.name);
         resolve();
       });
     });
