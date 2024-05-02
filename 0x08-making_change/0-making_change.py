@@ -4,8 +4,20 @@
 
 def makeChange(coins, total):
     """Define a function"""
-    dp = [0] + [total+1] * total
-    for coin in coins:
-        for x in range(coin, total+1):
-            dp[x] = min(dp[x], dp[x - coin] + 1)
-    return dp[total] if dp[total] != total+1 else -1
+    if total <= 0 :
+         return 0
+    if min(coins) > total:
+         return -1
+    dp = [-1 for i in range(0, total + 1)]
+    for i in coins:
+        if i > len(dp) - 1:
+            continue
+        dp[i] = 1
+        for j in range(i + 1, total + 1):
+            if dp[j - i] == -1:
+                continue
+            elif dp[j] == -1:
+               dp[j] = dp[j - i] + 1
+            else:
+               dp[j] = min(dp[j], dp[j - i] + 1)
+    return dp[total]
