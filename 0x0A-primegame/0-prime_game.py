@@ -3,46 +3,26 @@
 
 
 def isWinner(x, nums):
-    """Function to check if a number is prime"""
-    def is_prime(n):
-        if n <= 1:
-            return False
-        if n <= 3:
-            return True
-        if n % 2 == 0 or n % 3 == 0:
-            return False
-        i = 5
-        while i * i <= n:
-            if n % i == 0 or n % (i + 2) == 0:
-                return False
-            i += 6
-        return True
-
-    """Function to simulate the game round"""
-    def play_round(n):
-        primes = [i for i in range(2, n+1) if is_prime(i)]
-        turn = 0
-        while primes:
-            if turn == 0:
-                choice = primes.pop(0)
-            else:
-                choice = primes.pop()
-            primes = [p for p in primes if p % choice != 0]
-            turn = 1 - turn
-        return 'Maria' if turn == 1 else 'Ben'
+    """Define isWinner function"""
+    if x < 1 or not nums:
+        return None
 
     maria_wins = 0
     ben_wins = 0
-    for n in nums:
-        winner = play_round(n)
-        if winner == 'Maria':
-            maria_wins += 1
-        else:
-            ben_wins += 1
 
-    if maria_wins > ben_wins:
-        return 'Maria'
-    elif ben_wins > maria_wins:
-        return 'Ben'
-    else:
+    n = max(nums)
+    primes = [True for _ in range(1, n + 1)]
+    primes[0] = False
+    for i, is_prime in enumerate(primes, 1):
+        if i == 1 or not is_prime:
+            continue
+        for j in range(i + i, n + 1, i):
+            primes[j - 1] = False
+
+    for _, n in zip(range(x), nums):
+        primes_count = len(list(filter(lambda x: x, primes[0: n])))
+        ben_wins += primes_count % 2 == 0
+        maria_wins += primes_count % 2 == 1
+    if maria_wins == ben_wins:
         return None
+    return 'Maria' if maria_wins > ben_wins else 'Ben'
